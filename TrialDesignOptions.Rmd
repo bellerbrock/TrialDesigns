@@ -1,0 +1,95 @@
+---
+title: "PYT Design Options"
+author: "Bryan Ellerbrock"
+date: "5/17/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# install.packages("agricolae")
+# install.packages("desplot")
+# install.packages("blocksdesign")
+```
+
+## Randomized Complete Block Design
+
+Typical 96 plot (24 accession, 4 rep) randomized complete block design (CB) using agricolae package.
+
+```{r agricolae CB}
+
+library(agricolae)
+library(desplot)
+
+checks <- c("Covington", "Beauregard")
+treatments <- c(checks, 1:22)
+nRep <- 4
+nRow <- 12
+nTier <- 8
+plotWidth <- 20 
+plotLength <- 25
+xlen <- nRow * plotWidth
+ylen <- nTier * plotLength
+
+CB <- design.rcbd(treatments, r=nRep, serie=2)$book
+
+CB <- transform(CB, is_a_control = ifelse(CB$treatments %in% checks, TRUE, FALSE))
+CB$row = rep(1:nRow,times=nTier)
+CB$tier = rep(1:nTier,each=nRow)
+
+# lattice display, incorporates field dimensions via aspect=ylen/xlen
+CB_lattice_layout <- desplot(form=block~row+tier, data=CB, text=treatments, out1=block, col=is_a_control, cex=1.25, main="Randomized Complete Block Design", aspect=ylen/xlen, xlab="rows", ylab="tiers", shorten="sub")
+CB_lattice_layout
+
+# ggplot display, excludes treatments from key by default
+CB_gg_layout <- desplot(form=block~row+tier, data=CB, text=treatments, out1=block, col=is_a_control, cex=1.25, main="Randomized Complete Block Design", gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
+CB_gg_layout
+
+```
+
+## Resolvable Row-Column Design
+
+96 plot (24 accession, 4 rep) resolvable row-column design (RC) using blocksdesign package.
+
+```{r blocksdesign RC}
+
+library(blocksdesign)
+
+RCblocks <- data.frame(
+  block = gl(nRep,length(treatments)),
+  row = gl(nRow,1),
+  tier = gl(nTier,nRow)
+)
+
+RC <- design(treatments, RCblocks)$Design
+RC <- transform(RC, is_a_control = ifelse(RC$treatments %in% checks, TRUE, FALSE))
+RClayout <- desplot(form=block~row+tier, data=RC, text=treatments, out1=block, out2=row, col=is_a_control, cex=1.25, main="Resolvable Row-Column Design", gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
+RClayout
+
+```
+
+## Doubly Resolvable Row-Column Design
+
+96 plot (24 accession, 4 rep) doubly resolvable row-column design (DR) using blocksdesign package.
+
+```{r blocksdesign DR}
+
+DRblocks <- data.frame(
+  tier_block = gl(nRep,length(treatments)),
+  row_block = gl(nRep,1),
+  dummy_tier = gl(nTier*2,nRow/2)
+)
+
+DR <- design(treatments, DRblocks)$Design
+
+DR <- transform(DR, is_a_control = ifelse(DR$treatments %in% checks, TRUE, FALSE))
+DR$row = rep(rep(1:nRow,each=nTier/nRep),times=nRep)
+DR <- DR[order(DR$row),]
+DR$tier = rep(1:nTier,times=nRow)
+
+DRlayout <- desplot(form=tier_block~row+tier, data=DR, text=treatments, out1=tier_block, out2=row_block, col=is_a_control, cex=1.25, main="Doubly Resolvable Row-Column Design", gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
+DRlayout
+
+```
