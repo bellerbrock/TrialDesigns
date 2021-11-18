@@ -1,7 +1,14 @@
-New Design Options
+Trial Design Options
 ================
-Bryan Ellerbrock
-5/17/2021
+
+#### Table of Contents
+
+[Randomized Complete Block
+Design](#randomized-complete-block-design)<br> [Resolvable Row Column
+Design](#resolvable-row-column-design)<br> [Doubly Resolvable Row Column
+Design](#doubly-resolvabl-row-column-design)<br> [Field
+Dimensions](#field-dimensions)<br> [Field
+Variation](#field-variation)<br>
 
 ## Randomized Complete Block Design
 
@@ -38,7 +45,7 @@ CB_gg_layout
 
 ![](README_files/figure-gfm/agricolae%20CB-1.png)<!-- -->
 
-## Resolvable Row-Column Design
+## Resolvable Row Column Design
 
 96 plot (24 accession, 4 rep) resolvable row-column design (RC) using
 blocksdesign package. In addition to the one-way blocks it adds a
@@ -64,7 +71,7 @@ RClayout
 
 ![](README_files/figure-gfm/blocksdesign%20RC-1.png)<!-- -->
 
-## Doubly Resolvable Row-Column Design
+## Doubly Resolvable Row Column Design
 
 96 plot (24 accession, 4 rep) doubly resolvable row-column design (DR)
 using blocksdesign package. Like the resolvable row-column design, but

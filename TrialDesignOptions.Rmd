@@ -1,8 +1,13 @@
 ---
-title: "New Design Options"
-author: "Bryan Ellerbrock"
-date: "5/17/2021"
+title: "Trial Design Options"
 output: rmarkdown::github_document
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(
+          inputFile,
+          encoding=encoding, 
+          output_file='README.md'
+          )
+      })
 editor_options:
   chunk_output_type: console
 ---
@@ -17,13 +22,18 @@ editor_options:
 setwd("~/projects/TrialDesigns")
 ```
 
+#### Table of Contents
+
+[Randomized Complete Block Design](#randomized-complete-block-design)<br>
+[Resolvable Row Column Design](#resolvable-row-column-design)<br>
+[Doubly Resolvable Row Column Design](#doubly-resolvabl-row-column-design)<br>
+[Field Dimensions](#field-dimensions)<br>
+[Field Variation](#field-variation)<br>
+
 
 ## Randomized Complete Block Design
 
-
 Typical 96 plot (24 accession, 4 rep) randomized complete block design (CB) using agricolae package. No restriction on randomization within the one-way blocks. Simple, but can result in significant clumping.
-
-
 
 ```{r agricolae CB, warning=FALSE}
 
@@ -54,13 +64,9 @@ CB_gg_layout
 
 ```
 
-
-## Resolvable Row-Column Design
-
+## Resolvable Row Column Design
 
 96 plot (24 accession, 4 rep) resolvable row-column design (RC) using blocksdesign package. In addition to the one-way blocks it adds a constraint that no treatment may appear more than once in the long rows (latinization). Each long row becomes an incomplete block.
-
-
 
 ```{r blocksdesign RC, warning=FALSE}
 
@@ -81,13 +87,9 @@ RClayout
 
 ```
 
-
-## Doubly Resolvable Row-Column Design
-
+## Doubly Resolvable Row Column Design
 
 96 plot (24 accession, 4 rep) doubly resolvable row-column design (DR) using blocksdesign package. Like the resolvable row-column design, but adds a constraint that no treatment may appear more than once in each group of t=nRows/nReps long rows (t-latinization). Each group of long rows forms a complete block, so the design has 2-way blocking and is doubly resolvable.
-
-
 
 ```{r blocksdesign DR, warning=FALSE}
 
@@ -117,13 +119,9 @@ DRlayout
 
 ```
 
-
 ## Field Dimensions
 
-
 Comparison of field dimensions for different row and tier configurations using desplot aspect option. Plots are longer than they are wide, so a greater number of rows than tiers should make squarer designs, and be more suitable for 2-way blocking.
-
-
 
 ```{r desplot aspect, fig.width = 8, fig.height = 8,  fig.align="center", warning=FALSE}
 
