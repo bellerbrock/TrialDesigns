@@ -6,7 +6,7 @@ Trial Design Options
 [Randomized Complete Block
 Design](#randomized-complete-block-design)<br> [Resolvable Row Column
 Design](#resolvable-row-column-design)<br> [Doubly Resolvable Row Column
-Design](#doubly-resolvabl-row-column-design)<br> [Field
+Design](#doubly-resolvable-row-column-design)<br> [Field
 Dimensions](#field-dimensions)<br> [Field
 Variation](#field-variation)<br>
 
