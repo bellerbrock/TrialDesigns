@@ -1,32 +1,15 @@
----
-title: "New Design Options"
-author: "Bryan Ellerbrock"
-date: "5/17/2021"
-output: rmarkdown::github_document
-editor_options:
-  chunk_output_type: console
----
-
-
-```{r setup, include=FALSE}
-# knitr::opts_chunk$set(echo = TRUE)
-# install.packages("agricolae")
-# install.packages("desplot")
-# install.packages("blocksdesign")
-# install.packages("cowplot")
-setwd("~/projects/TrialDesigns")
-```
-
+New Design Options
+================
+Bryan Ellerbrock
+5/17/2021
 
 ## Randomized Complete Block Design
 
+Typical 96 plot (24 accession, 4 rep) randomized complete block design
+(CB) using agricolae package. No restriction on randomization within the
+one-way blocks. Simple, but can result in significant clumping.
 
-Typical 96 plot (24 accession, 4 rep) randomized complete block design (CB) using agricolae package. No restriction on randomization within the one-way blocks. Simple, but can result in significant clumping.
-
-
-
-```{r agricolae CB, warning=FALSE}
-
+``` r
 library(agricolae)
 library(desplot)
 
@@ -51,19 +34,18 @@ CB_gg_layout <- desplot( form=block~row+tier, data=CB, text=treatments, out1=blo
   col=is_a_control, cex=1.25, main="Randomized Complete Block Design",
   gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
 CB_gg_layout
-
 ```
 
+![](README_files/figure-gfm/agricolae%20CB-1.png)<!-- -->
 
 ## Resolvable Row-Column Design
 
+96 plot (24 accession, 4 rep) resolvable row-column design (RC) using
+blocksdesign package. In addition to the one-way blocks it adds a
+constraint that no treatment may appear more than once in the long rows
+(latinization). Each long row becomes an incomplete block.
 
-96 plot (24 accession, 4 rep) resolvable row-column design (RC) using blocksdesign package. In addition to the one-way blocks it adds a constraint that no treatment may appear more than once in the long rows (latinization). Each long row becomes an incomplete block.
-
-
-
-```{r blocksdesign RC, warning=FALSE}
-
+``` r
 library(blocksdesign)
 
 RCblocks <- data.frame(
@@ -78,19 +60,20 @@ RClayout <- desplot(form=block~row+tier, data=RC, text=treatments, out1=block,
     out2=row, col=is_a_control, cex=1.25, main="Resolvable Row-Column Design",
     gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
 RClayout
-
 ```
 
+![](README_files/figure-gfm/blocksdesign%20RC-1.png)<!-- -->
 
 ## Doubly Resolvable Row-Column Design
 
+96 plot (24 accession, 4 rep) doubly resolvable row-column design (DR)
+using blocksdesign package. Like the resolvable row-column design, but
+adds a constraint that no treatment may appear more than once in each
+group of t=nRows/nReps long rows (t-latinization). Each group of long
+rows forms a complete block, so the design has 2-way blocking and is
+doubly resolvable.
 
-96 plot (24 accession, 4 rep) doubly resolvable row-column design (DR) using blocksdesign package. Like the resolvable row-column design, but adds a constraint that no treatment may appear more than once in each group of t=nRows/nReps long rows (t-latinization). Each group of long rows forms a complete block, so the design has 2-way blocking and is doubly resolvable.
-
-
-
-```{r blocksdesign DR, warning=FALSE}
-
+``` r
 create_dr_layout <- function(treatments, checks, reps, rows, tiers) {
   DRblocks <- data.frame(
     tier_block = gl(reps,length(treatments)),
@@ -114,19 +97,18 @@ DRlayout <- desplot(form=tier_block~row+tier, data=DR, text=treatments, out1=tie
     out2=row_block, col=is_a_control, cex=1.25, main="Doubly Resolvable Row-Column Design",
     gg=TRUE, xlab="rows", ylab="tiers", shorten="sub")
 DRlayout
-
 ```
 
+![](README_files/figure-gfm/blocksdesign%20DR-1.png)<!-- -->
 
 ## Field Dimensions
 
+Comparison of field dimensions for different row and tier configurations
+using desplot aspect option. Plots are longer than they are wide, so a
+greater number of rows than tiers should make squarer designs, and be
+more suitable for 2-way blocking.
 
-Comparison of field dimensions for different row and tier configurations using desplot aspect option. Plots are longer than they are wide, so a greater number of rows than tiers should make squarer designs, and be more suitable for 2-way blocking.
-
-
-
-```{r desplot aspect, fig.width = 8, fig.height = 8,  fig.align="center", warning=FALSE}
-
+``` r
 plotWidth <- 7  # 42 inch spacing between field rows, 2 field rows per plot = 7 foot wide plots
 plotLength <- 25
 xlen <- nRow * plotWidth
@@ -149,12 +131,13 @@ alt_lattice_layout <- desplot(form=tier_block~row+tier, data=altDR, text=treatme
 
 library(cowplot)
 plot_grid(lattice_layout, alt_lattice_layout, scale = c(1, lenratio))
-
 ```
+
+<img src="README_files/figure-gfm/desplot aspect-1.png" style="display: block; margin: auto;" />
 
 ## Field Variation
 
-```{r desplot heatmap, fig.width = 6, fig.height = 6, fig.align="center", warning=FALSE}
+``` r
 # library(brapir)
 # ??brapir
 # spbase <- brapi_db()$sweetpotatobase
@@ -168,14 +151,13 @@ names(T18NCGT0014HCR)[names(T18NCGT0014HCR) ==
         "Total.storage.root.weight.per.NET.plot.in.kg.CO_331.0000237"] <- "TRW"
 desplot(T18NCGT0014HCR, TRW ~ colNumber*rowNumber, main="18NCGT0014HCR Total Root Yield",
         col=germplasmName, num=germplasmName, cex=1, out1=blockNumber, aspect=4/1)
+```
 
+<img src="README_files/figure-gfm/desplot heatmap-1.png" style="display: block; margin: auto;" />
+
+``` r
 # names(T18NCGT0014HCR)[names(T18NCGT0014HCR) ==
 # "Length.to.diameter.ratio.computation.CO_331.0000779"] <- "LDR"
 # desplot(T18NCGT0014HCR, LDR ~ colNumber*rowNumber, main="18NCGT0014HCR Length to Diameter Ratio",
 #         col=germplasmName, num=germplasmName, cex=1, out1=blockNumber, aspect=4/1)
-
 ```
-
-
-
-
