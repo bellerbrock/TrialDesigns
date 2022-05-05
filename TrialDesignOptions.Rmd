@@ -100,6 +100,24 @@ create_dr_layout <- function(treatments, checks, reps, rows, tiers) {
     dummy_tier = gl(tiers*2,rows/2)
   )
 
+  turns = (rows/2)-1
+  next_plot = 1
+  for (i in 1:tiers) {
+    DRblocks$row_block[[next_plot]] = DRblocks$tier_block[[i]]
+    next_plot = next_plot + 1
+    for (j in 1:turns) {
+      before = (j*2*tiers) + 1 - i
+      after = (j*2*tiers) + i
+      DRblocks$row_block[[next_plot]] = DRblocks$tier_block[[before]]
+      next_plot = next_plot + 1
+      DRblocks$row_block[[next_plot]] = DRblocks$tier_block[[after]]
+      next_plot = next_plot + 1
+    }
+    last = (rows * tiers) + 1 - i
+    DRblocks$row_block[[next_plot]] = DRblocks$tier_block[[last]]
+    next_plot = next_plot + 1
+  }
+  
   DR <- design(treatments, DRblocks)$Design
   
   DR <- transform(DR, is_a_control = ifelse(DR$treatments %in% checks, TRUE, FALSE))
